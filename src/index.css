@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import './styles/accessibility.css';
+
+@layer base {
+  html {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #0a0a0f;
+    color: #ffffff;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: #0a0a0f;
+    color: #ffffff;
+  }
+  
+  #root {
+    min-height: 100vh;
+  }
+  
+  input {
+    font-size: 16px;
+  }
+}
+
+@layer utilities {
+  .cell-alive {
+    background-color: #00d4ff;
+  }
+  
+  .cell-dead {
+    background-color: #1a1a2a;
+  }
+  
+  .grid-line {
+    stroke: #333344;
+  }
+}
+
+@media (prefers-contrast: high) {
+  :root {
+    --cell-alive: #ffffff;
+    --cell-dead: #000000;
+    --grid-line: #808080;
+    --background: #000000;
+    --text-primary: #ffffff;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cell-transition {
+    transition: none;
+  }
+}
