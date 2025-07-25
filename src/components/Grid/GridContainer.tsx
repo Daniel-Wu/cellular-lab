@@ -15,7 +15,7 @@ export const GridContainer: React.FC<GridContainerProps> = ({
 
   const containerDimensions = useMemo(() => {
     const aspectRatio = grid.width / grid.height;
-    const maxSize = Math.min(window.innerWidth * 0.8, window.innerHeight * 0.8, 500);
+    const maxSize = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.8, 800);
     
     let width: number;
     let height: number;
@@ -29,8 +29,8 @@ export const GridContainer: React.FC<GridContainerProps> = ({
     }
 
     return {
-      width: Math.max(320, Math.min(width, 1000)),
-      height: Math.max(320, Math.min(height, 1000))
+      width: Math.max(400, Math.min(width, 1200)),
+      height: Math.max(400, Math.min(height, 1200))
     };
   }, [grid.width, grid.height]);
 
@@ -45,7 +45,7 @@ export const GridContainer: React.FC<GridContainerProps> = ({
         />
       </div>
 
-      <div className="mt-4 text-center text-sm text-text-secondary">
+      <div className="mt-4 text-center text-lg text-text-secondary">
         <div>
           Grid Size: {grid.width} × {grid.height} cells
         </div>

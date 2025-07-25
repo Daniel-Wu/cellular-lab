@@ -8,6 +8,7 @@ interface AppActions {
   setCell: (index: number, state: 0 | 1) => void
   toggleCell: (index: number) => void
   clearGrid: () => void
+  randomizeGrid: () => void
   setRule: (rule: Rule) => void
   setSpeed: (speed: number) => void
   startSimulation: () => void
@@ -26,18 +27,29 @@ interface AppActions {
 
 type AppStore = AppState & AppActions
 
-const DEFAULT_GRID_SIZE = 50
 const DEFAULT_SPEED = 200
 
 const createInitialGrid = (width: number, height: number): Uint8Array => {
   return new Uint8Array(width * height)
 }
 
+const getDefaultGridSize = () => {
+  // Check if we're in a browser environment
+  if (typeof window !== 'undefined') {
+    const isMobile = window.innerWidth < 768 // md breakpoint
+    return isMobile ? { width: 50, height: 50 } : { width: 100, height: 50 }
+  }
+  // Default for SSR or initial render
+  return { width: 50, height: 50 }
+}
+
+const defaultGridSize = getDefaultGridSize()
+
 const initialState: AppState = {
   grid: {
-    current: createInitialGrid(DEFAULT_GRID_SIZE, DEFAULT_GRID_SIZE),
-    width: DEFAULT_GRID_SIZE,
-    height: DEFAULT_GRID_SIZE,
+    current: createInitialGrid(defaultGridSize.width, defaultGridSize.height),
+    width: defaultGridSize.width,
+    height: defaultGridSize.height,
     generation: 0,
   },
   simulation: {
@@ -115,6 +127,26 @@ export const useAppStore = create<AppStore>((set, get) => ({
     })
   },
 
+  randomizeGrid: () => {
+    const currentState = get()
+    const { width, height } = currentState.grid
+    const gridSize = width * height
+    const newGrid = new Uint8Array(gridSize)
+    
+    // Fill grid with random values (0.5 probability for each cell to be alive)
+    for (let i = 0; i < gridSize; i++) {
+      newGrid[i] = Math.random() > 0.5 ? 1 : 0
+    }
+    
+    set({
+      grid: {
+        ...currentState.grid,
+        current: newGrid,
+        generation: 0,
+      },
+    })
+  },
+
   setRule: (rule: Rule) => {
     set(() => ({
       rule: { ...rule },
@@ -122,12 +154,38 @@ export const useAppStore = create<AppStore>((set, get) => ({
   },
 
   setSpeed: (speed: number) => {
-    set((state) => ({
+    const currentState = get()
+    const wasRunning = currentState.simulation.isRunning
+    
+    // If simulation is running, stop it first
+    if (wasRunning && currentState.simulation.intervalId) {
+      clearInterval(currentState.simulation.intervalId)
+    }
+    
+    // Update the speed
+    set({
       simulation: {
-        ...state.simulation,
+        ...currentState.simulation,
         speed,
+        intervalId: null,
+        isRunning: false,
       },
-    }))
+    })
+    
+    // If it was running, restart it with the new speed
+    if (wasRunning) {
+      const intervalId = window.setInterval(() => {
+        get().stepSimulation()
+      }, speed)
+
+      set((state) => ({
+        simulation: {
+          ...state.simulation,
+          isRunning: true,
+          intervalId,
+        },
+      }))
+    }
   },
 
   startSimulation: () => {
