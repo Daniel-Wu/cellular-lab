@@ -86,35 +86,9 @@ export const PatternLibrary: React.FC<PatternLibraryProps> = ({
   return (
     <div
       className={`pattern-library ${className}`}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '16px',
-        padding: '20px',
-        backgroundColor: '#1a1a2a',
-        borderRadius: '12px',
-        border: '1px solid #333344',
-        maxWidth: '800px',
-        width: '100%',
-        maxHeight: '600px'
-      }}
     >
       {showImport && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-            padding: '20px'
-          }}
-        >
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm animate-fade-in">
           <PatternImport
             onImport={handleImportPattern}
             onClose={() => setShowImport(false)}
@@ -123,21 +97,7 @@ export const PatternLibrary: React.FC<PatternLibraryProps> = ({
       )}
 
       {showExport && grid && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-            padding: '20px'
-          }}
-        >
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm animate-fade-in">
           <PatternExport
             grid={grid}
             gridWidth={gridWidth}
@@ -150,37 +110,22 @@ export const PatternLibrary: React.FC<PatternLibraryProps> = ({
         </div>
       )}
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h3 style={{ margin: 0, color: '#fff', fontSize: '18px' }}>Pattern Library</h3>
-        <div style={{ display: 'flex', gap: '8px' }}>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <h3 className="text-xl font-bold text-text-primary flex items-center gap-2">
+          <div className="w-3 h-3 bg-gradient-to-r from-cell-alive to-primary-400 rounded-full"></div>
+          Pattern Library
+        </h3>
+        <div className="flex gap-3">
           <button
             onClick={() => setShowImport(true)}
-            style={{
-              padding: '8px 12px',
-              borderRadius: '6px',
-              border: '1px solid #333344',
-              backgroundColor: '#2a2a3a',
-              color: '#00d4ff',
-              cursor: 'pointer',
-              fontSize: '12px',
-              fontWeight: 'bold'
-            }}
+            className="btn-primary flex items-center gap-2 text-sm"
           >
             Import
           </button>
           {grid && (
             <button
               onClick={() => setShowExport(true)}
-              style={{
-                padding: '8px 12px',
-                borderRadius: '6px',
-                border: '1px solid #333344',
-                backgroundColor: '#2a2a3a',
-                color: '#00d4ff',
-                cursor: 'pointer',
-                fontSize: '12px',
-                fontWeight: 'bold'
-              }}
+              className="btn-secondary flex items-center gap-2 text-sm"
             >
               Export
             </button>
@@ -188,44 +133,23 @@ export const PatternLibrary: React.FC<PatternLibraryProps> = ({
         </div>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <div className="mb-6">
         <input
           type="text"
           placeholder="Search patterns..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{
-            padding: '10px 12px',
-            borderRadius: '6px',
-            border: '1px solid #333344',
-            backgroundColor: '#2a2a3a',
-            color: '#fff',
-            fontSize: '14px'
-          }}
+          className="input-field w-full"
         />
       </div>
 
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '12px',
-          flex: 1,
-          overflowY: 'auto'
-        }}
-      >
-        <div style={{ color: '#ccc', fontSize: '14px', fontWeight: 'bold' }}>
-          Famous Patterns ({filteredPatterns.length})
+      <div className="flex flex-col gap-4 flex-1 overflow-y-auto">
+        <div className="flex items-center gap-2 text-text-secondary font-semibold">
+          <div className="w-2 h-2 bg-cell-alive rounded-full"></div>
+          <span>Famous Patterns ({filteredPatterns.length})</span>
         </div>
         
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))',
-            gap: '12px',
-            padding: '8px'
-          }}
-        >
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 p-2">
           {filteredPatterns.map((pattern) => (
             <PatternPreview
               key={pattern.name}
@@ -238,138 +162,84 @@ export const PatternLibrary: React.FC<PatternLibraryProps> = ({
         </div>
 
         {filteredPatterns.length === 0 && (
-          <div
-            style={{
-              textAlign: 'center',
-              color: '#888',
-              fontSize: '14px',
-              padding: '20px'
-            }}
-          >
-            No patterns found matching "{searchTerm}"
+          <div className="text-center text-text-tertiary py-12">
+            <div className="text-4xl mb-4">🔍</div>
+            <p className="text-lg mb-2">No patterns found</p>
+            <p className="text-sm">Try searching for "{searchTerm}"</p>
           </div>
         )}
       </div>
 
+
+
       {selectedPattern && (
-        <div
-          style={{
-            padding: '16px',
-            borderRadius: '8px',
-            backgroundColor: '#2a2a3a',
-            border: '1px solid #333344'
-          }}
-        >
-          <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
-            <PatternPreview pattern={selectedPattern} size={100} />
+        <div className="mt-6 card-elevated p-6 animate-scale-in">
+          <div className="flex flex-col lg:flex-row gap-6 items-start">
+            <div className="flex-shrink-0">
+              <PatternPreview pattern={selectedPattern} size={120} />
+            </div>
             
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div className="flex-1 space-y-4">
               <div>
-                <div style={{ color: '#fff', fontSize: '16px', fontWeight: 'bold', marginBottom: '4px' }}>
+                <h4 className="text-xl font-bold text-text-primary mb-2">
                   {selectedPattern.name}
-                </div>
-                <div style={{ color: '#ccc', fontSize: '12px' }}>
-                  Size: {selectedPattern.width} × {selectedPattern.height} | 
-                  Cells: {selectedPattern.cells.length} | 
-                  Rule: {selectedPattern.rule || 'B3/S23'}
+                </h4>
+                <div className="text-sm text-text-secondary space-y-1">
+                  <div>Size: {selectedPattern.width} × {selectedPattern.height}</div>
+                  <div>Cells: {selectedPattern.cells.length}</div>
+                  <div>Rule: {selectedPattern.rule || 'B3/S23'}</div>
                 </div>
               </div>
 
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                <div style={{ color: '#ccc', fontSize: '12px', fontWeight: 'bold', width: '100%' }}>
-                  Transformations:
+              <div>
+                <div className="text-sm font-semibold text-text-secondary mb-3 flex items-center gap-2">
+                  <div className="w-2 h-2 bg-warning rounded-full"></div>
+                  Transformations
                 </div>
                 
-                <button
-                  onClick={() => handleTransform('rotate90')}
-                  style={{
-                    padding: '4px 8px',
-                    borderRadius: '4px',
-                    border: '1px solid #444',
-                    backgroundColor: '#3a3a4a',
-                    color: '#ccc',
-                    cursor: 'pointer',
-                    fontSize: '11px'
-                  }}
-                >
-                  ↻ 90°
-                </button>
-                
-                <button
-                  onClick={() => handleTransform('rotate180')}
-                  style={{
-                    padding: '4px 8px',
-                    borderRadius: '4px',
-                    border: '1px solid #444',
-                    backgroundColor: '#3a3a4a',
-                    color: '#ccc',
-                    cursor: 'pointer',
-                    fontSize: '11px'
-                  }}
-                >
-                  ↻ 180°
-                </button>
-                
-                <button
-                  onClick={() => handleTransform('rotate270')}
-                  style={{
-                    padding: '4px 8px',
-                    borderRadius: '4px',
-                    border: '1px solid #444',
-                    backgroundColor: '#3a3a4a',
-                    color: '#ccc',
-                    cursor: 'pointer',
-                    fontSize: '11px'
-                  }}
-                >
-                  ↻ 270°
-                </button>
-                
-                <button
-                  onClick={() => handleTransform('flipH')}
-                  style={{
-                    padding: '4px 8px',
-                    borderRadius: '4px',
-                    border: '1px solid #444',
-                    backgroundColor: '#3a3a4a',
-                    color: '#ccc',
-                    cursor: 'pointer',
-                    fontSize: '11px'
-                  }}
-                >
-                  ↔ Flip H
-                </button>
-                
-                <button
-                  onClick={() => handleTransform('flipV')}
-                  style={{
-                    padding: '4px 8px',
-                    borderRadius: '4px',
-                    border: '1px solid #444',
-                    backgroundColor: '#3a3a4a',
-                    color: '#ccc',
-                    cursor: 'pointer',
-                    fontSize: '11px'
-                  }}
-                >
-                  ↕ Flip V
-                </button>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => handleTransform('rotate90')}
+                    className="btn-secondary text-xs px-3 py-1"
+                  >
+                    ↻ 90°
+                  </button>
+                  
+                  <button
+                    onClick={() => handleTransform('rotate180')}
+                    className="btn-secondary text-xs px-3 py-1"
+                  >
+                    ↻ 180°
+                  </button>
+                  
+                  <button
+                    onClick={() => handleTransform('rotate270')}
+                    className="btn-secondary text-xs px-3 py-1"
+                  >
+                    ↻ 270°
+                  </button>
+                  
+                  <button
+                    onClick={() => handleTransform('flipH')}
+                    className="btn-secondary text-xs px-3 py-1"
+                  >
+                    ↔ Flip H
+                  </button>
+                  
+                  <button
+                    onClick={() => handleTransform('flipV')}
+                    className="btn-secondary text-xs px-3 py-1"
+                  >
+                    ↕ Flip V
+                  </button>
+                </div>
               </div>
 
               <button
                 onClick={handlePatternSelect}
-                style={{
-                  padding: '10px 20px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  backgroundColor: '#00d4ff',
-                  color: '#000',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: 'bold',
-                  alignSelf: 'flex-start'
-                }}
+                className="btn-primary flex items-center gap-2"
               >
+                <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
                 Place Pattern
               </button>
             </div>
