@@ -38,7 +38,6 @@ function App() {
   // Initialize accessibility features
   const {
     announceToScreenReader,
-    showKeyboardShortcuts,
     getAccessibilityState
   } = useAccessibility({
     enableKeyboardShortcuts: true,
@@ -384,7 +383,6 @@ function App() {
               </div>
               
               <GridContainer 
-                showPerformanceMetrics={true} 
                 canvasRef={canvasRef}
                 aria-label={`Cellular automata grid, ${grid.width} by ${grid.height} cells, generation ${grid.generation}`}
               />
